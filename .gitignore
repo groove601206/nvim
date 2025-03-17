@@ -1,0 +1,19 @@
+# Ignore nvim directory
+nvim/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore Python virtual environments
+.env/
+.venv/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore log files
+*.log

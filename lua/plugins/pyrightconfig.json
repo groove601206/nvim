@@ -1,0 +1,21 @@
+{
+  "exclude": [
+    "**/node_modules",
+    "**/venv",
+    "**/dist",
+    "**/.cache",
+    "**/.mypy_cache",
+    "**/__pycache__",
+    "**/build",
+    "**/.git"
+  ],
+  "include": [
+    "src",
+    "tests"
+  ],
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.8",
+  "diagnosticMode": "openFilesOnly",
+  "stubPath": "./typings",
+  "autoImportCompletions": true
+}

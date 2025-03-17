@@ -1,0 +1,28 @@
+{
+  "python.autoComplete.addBrackets": true,
+  "python.autoComplete.extraPaths": [
+    "/Users/admin/.pyenv/versions/3.9.0/lib/python3.9/site-packages",
+    "/Users/admin/.pyenv/versions/3.9.0/envs/neovim-env/lib/python3.9/site-packages"
+  ],
+  "python.jediEnabled": false,
+  "coc.preferences.snippetSupport": true,
+  "pyright.disableOrganizeImports": false,
+  "python.formatting.provider": "black",
+  "coc.preferences.formatOnSaveFiletypes": [
+    "python",
+    "lua"
+  ],
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.linting.flake8Args": [
+    "--max-line-length=100"
+  ],
+  "coc.preferences.autoSave": "afterDelay",
+  "coc.preferences.autoSaveDelay": 1000,
+  "python.pythonPath": "/Users/admin/.pyenv/versions/3.9.0/envs/neovim-env/bin/python",
+  "coc.preferences.enableCodeActions": true,
+
+  // Lua formatter configuration
+  "lua.format.enable": true,
+  "lua.format.styluaPath": "/opt/homebrew/bin/stylua"  // Correct path to stylua
+}
