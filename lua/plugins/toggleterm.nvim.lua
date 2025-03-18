@@ -17,6 +17,18 @@ return {
             -- Load the theme (ensure it's loaded before any custom highlight settings)
             vim.cmd('colorscheme tokyonight-moon')
 
+            -- Ensure the Normal highlight group and others are transparent
+            vim.api.nvim_set_hl(0, 'Normal', { fg = "#c0caf5", bg = "none" })   -- Set background to none for transparency effect
+            vim.api.nvim_set_hl(0, 'NormalNC', { fg = "#c0caf5", bg = "none" }) -- Same for NormalNC for transparency
+            vim.api.nvim_set_hl(0, 'Terminal', { fg = "#c0caf5", bg = "none" }) -- Set terminal background to none for transparency effect
+
+            -- Set highlight for blue borders
+            vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#7aa2f7', bg = 'none' }) -- Blue border color
+
+            -- Set highlight for terminal colors to match theme (adjust for tokyonight-moon colors)
+            vim.api.nvim_set_hl(0, 'Terminal', { fg = "#c0caf5", bg = "none" })    -- Transparent background for terminal
+            vim.api.nvim_set_hl(0, 'FloatBorder', { fg = "#7aa2f7", bg = "none" }) -- Blue borders with transparent background
+
             local Terminal = require("toggleterm.terminal").Terminal
 
             -- Define floating terminal with Zsh and adjusted size for a "popup" feel
@@ -25,14 +37,14 @@ return {
                 hidden = true,
                 direction = "float",                   -- Floating terminal
                 float_opts = {
-                    border = "none",                   -- Remove the border
+                    border = "single",                 -- Add borders (single line border)
                     width = 100,                       -- Increased width to make the terminal larger
                     height = 30,                       -- Increased height to make the terminal larger
-                    winblend = 3,                      -- Adjust the transparency (higher value means more transparent)
+                    winblend = 0,                      -- Adjust transparency (higher value means more transparent)
                 },
                 highlights = {
-                    Normal = { fg = "#c0caf5", bg = "#1a1b26" },      -- Adjust foreground and background colors to match Tokyo Night Moon
-                    FloatBorder = { fg = "#1a1b26", bg = "#1a1b26" }, -- Make the border color match the background (effectively making it borderless)
+                    Normal = { fg = "#c0caf5", bg = "none" },      -- Transparent background for terminal content
+                    FloatBorder = { fg = "#7aa2f7", bg = "none" }, -- Blue borders with transparent background
                 },
             })
 
@@ -53,9 +65,6 @@ return {
                     relative = "editor", -- Set relative to the editor for floating windows
                 })                       -- Set window position
             end
-
-            -- Apply custom highlights after theme load to avoid conflicts
-            vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#1a1b26', bg = '#1a1b26' })
 
             -- Keybinding for floating terminal that won't conflict with Neotest
             vim.keymap.set("n", "<Leader>ft", function()

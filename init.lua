@@ -59,4 +59,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- Force highlight immediately
 vim.cmd("highlight LineNr guifg=#b0b0b0")                -- Force light gray for relative numbers
-vim.cmd("highlight CursorLineNr guifg=#ffffff gui=bold") -- Force white for the current line number
+vim.cmd("highlight CursorLineNr guifg=#ffffff gui=bold") -- Force white and bold for current line number
+
+-- Make popups fully transparent and adjust border
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })                 -- Make popups fully transparent
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "#7aa2f7" }) -- Light blue border for popups
