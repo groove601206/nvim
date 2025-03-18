@@ -14,38 +14,25 @@ return {
                 close_on_exit = true,
             })
 
+            -- Load the theme (ensure it's loaded before any custom highlight settings)
+            vim.cmd('colorscheme tokyonight-moon')
+
             local Terminal = require("toggleterm.terminal").Terminal
-
-            -- Define horizontal terminal with Zsh
-            local horizontal_term = Terminal:new({
-                cmd = "zsh",              -- Change to Zsh shell
-                hidden = true,
-                direction = "horizontal", -- Horizontal terminal
-            })
-
-            -- Define vertical terminal with Zsh (making it wider by setting size to 60)
-            local vertical_term = Terminal:new({
-                cmd = "zsh",            -- Change to Zsh shell
-                hidden = true,
-                direction = "vertical", -- Vertical terminal
-                size = 60,              -- Increased size to make the terminal even wider
-            })
 
             -- Define floating terminal with Zsh and adjusted size for a "popup" feel
             local float_term = Terminal:new({
-                cmd = "zsh",            -- Change to Zsh shell
+                cmd = "zsh -c 'cd ~/Projects && zsh'", -- Change directory to ~/Projects before starting Zsh
                 hidden = true,
-                direction = "float",    -- Floating terminal
+                direction = "float",                   -- Floating terminal
                 float_opts = {
-                    border = "rounded", -- Rounded border for a smoother look
-                    width = 100,        -- Increased width to make the terminal larger
-                    height = 30,        -- Increased height to make the terminal larger
-                    winblend = 0,       -- No transparency (clear background)
+                    border = "none",                   -- Remove the border
+                    width = 100,                       -- Increased width to make the terminal larger
+                    height = 30,                       -- Increased height to make the terminal larger
+                    winblend = 3,                      -- Adjust the transparency (higher value means more transparent)
                 },
-                -- Apply green border color to the floating terminal
                 highlights = {
-                    Normal = { fg = "#c0caf5", bg = "#1a1b26" },      -- Adjust foreground and background colors to match Tokyo Night
-                    FloatBorder = { fg = "#50fa7b", bg = "#1a1b26" }, -- Green border color for the floating terminal
+                    Normal = { fg = "#c0caf5", bg = "#1a1b26" },      -- Adjust foreground and background colors to match Tokyo Night Moon
+                    FloatBorder = { fg = "#1a1b26", bg = "#1a1b26" }, -- Make the border color match the background (effectively making it borderless)
                 },
             })
 
@@ -67,26 +54,15 @@ return {
                 })                       -- Set window position
             end
 
+            -- Apply custom highlights after theme load to avoid conflicts
+            vim.api.nvim_set_hl(0, 'FloatBorder', { fg = '#1a1b26', bg = '#1a1b26' })
+
             -- Keybinding for floating terminal that won't conflict with Neotest
             vim.keymap.set("n", "<Leader>ft", function()
                 float_term:toggle()
                 -- Recalculate and center the floating terminal after toggling
                 center_float_term()
             end, { desc = "Toggle Floating Terminal" })
-
-            -- Keybindings to toggle different terminals
-            vim.keymap.set("n", "<Leader>th", function()
-                horizontal_term:toggle()
-            end, { desc = "Toggle Horizontal Terminal" })
-
-            vim.keymap.set("n", "<Leader>tv", function()
-                vertical_term:toggle()
-            end, { desc = "Toggle Vertical Terminal" })
-
-            -- Keybinding to close all terminals
-            vim.keymap.set("n", "<Leader>tq", function()
-                vim.cmd("ToggleTermExit")
-            end, { desc = "Close All Terminals" })
         end,
     },
 }
