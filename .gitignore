@@ -1,0 +1,36 @@
+# Neovim swap/backup/undo files
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.undo
+
+# Lua cache
+*.luac
+
+# Python bytecode and cache
+*.pyc
+*.pyo
+__pycache__/
+
+# Lazy.nvim plugin lockfile
+lua/**/lazy-lock.json
+
+# packer.nvim compiled plugin loader (if used)
+plugin/packer_compiled.lua
+
+# Optional plugin directories (if you use "site" manually or legacy methods)
+site/
+
+# Python virtual environments
+.venv/
+env/
+ENV/
+venv/
+# dotenv files
+.env
+
+# OS/system files
+.DS_Store
+Thumbs.db
