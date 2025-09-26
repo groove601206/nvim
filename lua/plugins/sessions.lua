@@ -2,9 +2,9 @@ return {
 	"rmagatti/auto-session",
 	lazy = false,
 	keys = {
-		{ "<leader>wr", "<cmd>SessionSearch<CR>", desc = "Session search" },
-		{ "<leader>ws", "<cmd>SessionSave<CR>", desc = "Save session" },
-		{ "<leader>wa", "<cmd>SessionToggleAutoSave<CR>", desc = "Toggle autosave" },
+		{ "<leader>wr", "<cmd>AutoSession search<CR>", desc = "Session search" },
+		{ "<leader>ws", "<cmd>AutoSession save<CR>", desc = "Save session" },
+		{ "<leader>wa", "<cmd>AutoSession toggle-auto-save<CR>", desc = "Toggle autosave" },
 	},
 	opts = {
 		auto_session_root_dir = vim.fn.stdpath("data") .. "/sessions",
