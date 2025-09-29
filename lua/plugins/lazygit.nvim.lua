@@ -8,7 +8,7 @@ return {
 			{
 				"<leader>gg",
 				function()
-					-- Use lcd so floating terminal sees the correct repo
+					-- Make sure the floating terminal opens in the correct repo
 					vim.cmd("lcd ~/.config/nvim")
 					vim.cmd("LazyGit")
 				end,
@@ -19,8 +19,6 @@ return {
 				"<leader>go",
 				function()
 					local repo_path = vim.fn.expand("~/.config/nvim")
-
-					-- Change to the repo directory
 					vim.cmd("lcd " .. repo_path)
 
 					-- Check for unstaged/uncommitted changes
@@ -32,7 +30,10 @@ return {
 
 					-- Stage all changes
 					print("Staging all changes...")
-					vim.fn.system("git add .")
+					local add_output = vim.fn.systemlist("git add .")
+					if #add_output > 0 then
+						print(table.concat(add_output, "\n"))
+					end
 					print("Staged ✅")
 
 					-- Prompt for commit message
@@ -41,19 +42,21 @@ return {
 						print("Commit aborted ⚠️")
 						return
 					end
-
-					-- Escape quotes in commit message
 					local escaped_msg = msg:gsub('"', '\\"')
 
 					-- Commit changes
-					local commit_output = vim.fn.system('git commit -m "' .. escaped_msg .. '"')
-					print(commit_output)
+					local commit_output = vim.fn.systemlist('git commit -m "' .. escaped_msg .. '" 2>&1')
+					print(table.concat(commit_output, "\n"))
 
-					-- Push to main branch via SSH
-					local push_output = vim.fn.systemlist("git push origin main 2>&1")
+					-- Detect current branch
+					local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
+					print("Pushing to branch: " .. branch)
+
+					-- Push changes using SSH agent
+					local push_output = vim.fn.systemlist("git push origin " .. branch .. " 2>&1")
 					print(table.concat(push_output, "\n"))
 
-					print("Changes committed & pushed via SSH ✅")
+					print("Changes committed & pushed ✅")
 				end,
 				desc = "Git commit & push all changes (~/.config/nvim)",
 			},
