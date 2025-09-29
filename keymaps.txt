@@ -1,0 +1,107 @@
+--Neotest
+# Neotest keymaps
+<leader>tc : Close test output
+<leader>tt : Run tests in current file
+<leader>tn : Run nearest test
+<leader>ts : Toggle test summary
+<leader>to : Show test output
+<leader>tp : Toggle output panel
+
+--ChatGPT
+
+map("n", "<leader>cG", "<cmd>ChatGPTRun grammar_correction<CR>", opts)  -- Grammar correction
+map("n", "<leader>cT", "<cmd>ChatGPTRun translate<CR>", opts)          -- Translate text
+map("n", "<leader>cS", "<cmd>ChatGPTRun summarize<CR>", opts)          -- Summarize text
+map("n", "<leader>cD", "<cmd>ChatGPTRun explain_code<CR>", opts)       -- Explain code
+map("n", "<leader>cB", "<cmd>ChatGPTRun optimize_code<CR>", opts)      -- Optimize code
+map("n", "<leader>cC", "<cmd>ChatGPT<CR>", opts)                       -- Open ChatGPT
+map("n", "<leader>cE", "<cmd>ChatGPTEditWithInstruction<CR>", opts)    -- Edit selection
+map("v", "<leader>cE", ":ChatGPTEditWithInstruction<CR>", opts)        -- Edit selection in visual mode
+
+
+--Neotree Keymap
+
+vim.api.nvim_set_keymap("n", "<leader>n", ":Neotree toggle<CR>", { noremap = true, silent = true })
+
+
+
+--Auto-Session Keymap
+
+vim.keymap.set("n", "<leader>ls", require("auto-session.session-lens").search_session, { desc = "Search Sessions" })
+
+--Telescope Keymaps
+# Telescope keymaps
+<leader>ff        : Telescope: Find files
+<leader>lg        : Telescope: Live grep
+<leader>fb        : Telescope: Buffers
+<leader>fh        : Telescope: Help tags
+<leader>fk        : Telescope: Keymaps
+<leader>fd        : Telescope: Diagnostics
+<leader>fo        : Telescope: Old files
+<leader>fe        : Telescope: File browser (with preview)
+<leader>fz        : Telescope: Zoxide
+<leader>kn        : Telescope: Find in Neovim config
+<leader>cn        : Telescope: Builtin pickers
+<leader>fa        : Telescope: Live grep with args
+<leader>fr        : Telescope: Frecency (Recent files)
+<leader><leader>  : Telescope: Smart open
+
+--Floating Terminal Keymap
+vim.keymap.set("n", "<Leader>ft", function()
+    -- Floating terminal code here
+end, { desc = "Floating Terminal" })
+vert terminal <leader>ht
+
+--GitSigns Keymaps
+
+vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", {})
+vim.keymap.set("n", "<leader>gt", "Gitsigns preview_hunk<CR>", {})
+
+--ZenMode Keymap
+
+vim.keymap.set("n", "<leader>z", zen_mode.toggle, { desc = "Toggle Zen Mode" })
+
+--Debugger Keymaps
+
+<leader>da     Run with Args
+<leader>db     Toggle Breakpoint
+<leader>dB     Breakpoint Condition (Prompt)
+<leader>dC     Run to Cursor
+<leader>dc     Run / Continue
+<leader>de     Evaluate Expression (under cursor or visual)
+<leader>dg     Go to Line (No Execute)
+<leader>di     Step Into
+<leader>dj     Stack Down
+<leader>dk     Stack Up
+<leader>dl     Run Last
+<leader>do     Step Over
+<leader>dO     Step Out
+<leader>dp     Pause
+<leader>dr     Toggle REPL
+<leader>dt     Terminate
+<leader>du     Toggle UI
+<leader>ds     Show DAP Session (print session info)
+<leader>dw     Add Watch Expression (prompt)
+
+# Telescope DAP Integration
+<leader>fdc    Telescope DAP Commands
+<leader>fdb    Telescope DAP Breakpoints
+<leader>fdF    Telescope DAP Frames
+
+# DAP Widgets
+<leader>dh     DAP Hover (variable under cursor)
+<leader>dS     DAP Scopes (floating window)
+<leader>dF     DAP Frames (floating window)
+
+
+--Compiler Keymaps
+
+vim.api.nvim_set_keymap("n", "<leader>co", ":CompilerOpen<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>ct", ":CompilerToggleResults<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>cr", ":CompilerRedo<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>cq", ":OverseerClose<CR>", { noremap = true, silent = true })
+
+--Notification History
+<Space> + h
+
+
