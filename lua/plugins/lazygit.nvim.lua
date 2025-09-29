@@ -31,7 +31,9 @@ return {
 					end
 
 					-- Stage all changes
+					print("Staging all changes...")
 					vim.fn.system("git add .")
+					print("Staged ✅")
 
 					-- Prompt for commit message
 					local msg = vim.fn.input("Commit message: ")
@@ -40,13 +42,16 @@ return {
 						return
 					end
 
-					-- Commit
-					local commit_output = vim.fn.system('git commit -m "' .. msg .. '"')
+					-- Escape quotes in commit message
+					local escaped_msg = msg:gsub('"', '\\"')
+
+					-- Commit changes
+					local commit_output = vim.fn.system('git commit -m "' .. escaped_msg .. '"')
 					print(commit_output)
 
 					-- Push to main branch via SSH
-					local push_output = vim.fn.system("git push origin main")
-					print(push_output)
+					local push_output = vim.fn.systemlist("git push origin main 2>&1")
+					print(table.concat(push_output, "\n"))
 
 					print("Changes committed & pushed via SSH ✅")
 				end,
