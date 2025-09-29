@@ -3,6 +3,15 @@ return {
 	cmd = "LazyGit",
 	dependencies = { "nvim-lua/plenary.nvim" },
 	keys = {
-		{ "<leader>gg", "<cmd>LazyGit<CR>", desc = "Open LazyGit" },
+		{
+			"<leader>gg",
+			function()
+				-- Change to the Neovim config repo
+				vim.cmd("cd ~/.config/nvim")
+				-- Open LazyGit
+				vim.cmd("LazyGit")
+			end,
+			desc = "Open LazyGit",
+		},
 	},
 }
