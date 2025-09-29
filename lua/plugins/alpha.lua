@@ -51,18 +51,17 @@ return {
                 -- Telekasten buttons
                 dashboard.button("n", "New Note", ":Telekasten new_note<CR>"),
                 dashboard.button("t", "Today’s Note", ":Telekasten goto_today<CR>"),
-
                 dashboard.button("F", "Find Notes", ":Telekasten find_notes<CR>"),
                 dashboard.button("s", "Search Notes", ":Telekasten search_notes<CR>"),
 
                 -- Utility
                 dashboard.button("u", "Update plugins", ":Lazy sync<CR>"),
-                dashboard.button("o", "Open NeoTree (Home)", ":Neotree reveal ~/<CR>"),
+                dashboard.button("o", "Open NeoTree (Home)", ":Neotree reveal " .. vim.fn.expand("~") .. "<CR>"),
                 dashboard.button("j", "Go to Projects", ":Neotree reveal " .. vim.fn.expand("~/Project") .. "<CR>"),
                 dashboard.button(
                     "l",
                     "Find Lua Plugins",
-                    ":lua require('telescope.builtin').find_files({ search_dirs = { '~/.config/nvim/lua/plugins' }, prompt_title = 'Find Lua Plugins' })<CR>"
+                    ":lua require('telescope.builtin').find_files({ search_dirs = { vim.fn.expand('~/.config/nvim/lua/plugins') }, prompt_title = 'Find Lua Plugins' })<CR>"
                 ),
                 dashboard.button("q", "Exit", ":qa<CR>"),
             }
