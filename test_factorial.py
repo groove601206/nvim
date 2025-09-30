@@ -1,26 +1,23 @@
-"""
-Module for computing the factorial of a number and unit tests to validate it.
-"""
+"""Unit tests for factorial function implementation."""
 
 import unittest
 
 
 def factorial(num):
-    """
-    Compute the factorial of a non-negative integer.
+    """Compute the factorial of a non-negative integer.
 
     Args:
-        num (int): The number to compute the factorial for.
+        num (int): The number to compute factorial for.
 
     Returns:
         int: The factorial of the number.
 
     Raises:
-        ValueError: If the input number is negative.
+        ValueError: If num is negative.
     """
     if num < 0:
         raise ValueError("Factorial does not exist for negative numbers")
-    if num == 0:
+    if num == 0:  # no need for elif after raise
         return 1
 
     result = 1
@@ -33,11 +30,11 @@ class TestFactorial(unittest.TestCase):
     """Unit tests for the factorial function."""
 
     def test_factorial_positive(self):
-        """Test factorial of a positive number."""
+        """Test factorial for a positive integer."""
         self.assertEqual(factorial(7), 5040)
 
     def test_factorial_zero(self):
-        """Test factorial of zero."""
+        """Test factorial when the input is zero."""
         self.assertEqual(factorial(0), 1)
 
     def test_factorial_negative(self):
@@ -47,4 +44,4 @@ class TestFactorial(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main()
