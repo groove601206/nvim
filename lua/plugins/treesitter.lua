@@ -2,6 +2,7 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         build = function()
+            -- Try to update parsers safely
             local ok, _ = pcall(vim.cmd, "TSUpdate")
             if not ok then
                 vim.notify("nvim-treesitter: TSUpdate failed during build step", vim.log.levels.WARN)
@@ -13,6 +14,14 @@ return {
                 highlight = { enable = true },
                 indent = { enable = true },
                 ensure_installed = { "lua", "python", "markdown", "norg" },
+            })
+
+            -- Force .py files to be recognized as Python
+            vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+                pattern = "*.py",
+                callback = function()
+                    vim.bo.filetype = "python"
+                end,
             })
         end,
     },
@@ -30,12 +39,13 @@ return {
                             workspaces = {
                                 notes = "~/Notes",
                             },
-                            default_workspace = "notes", -- must match 'notes'
+                            default_workspace = "notes", -- must match workspace
                         },
                     },
                 },
             })
 
+            -- Set folding and conceal for Neorg files
             vim.wo.foldlevel = 99
             vim.wo.conceallevel = 2
         end,
