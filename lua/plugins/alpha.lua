@@ -1,3 +1,4 @@
+-- plugins/alpha.lua
 return {
 	{
 		"goolord/alpha-nvim",
@@ -5,10 +6,12 @@ return {
 			"nvim-tree/nvim-web-devicons",
 			"nvim-telescope/telescope.nvim",
 			"renerocksai/telekasten.nvim", -- Telekasten for note management
+			"folke/snacks.nvim", -- Snacks for floating explorer
 		},
 		config = function()
 			local alpha = require("alpha")
 			local dashboard = require("alpha.themes.dashboard")
+			local Snacks = require("snacks")
 
 			-- Header
 			dashboard.section.header.val = {
@@ -55,7 +58,12 @@ return {
 				dashboard.button("F", "Find Notes", ":Telekasten find_notes<CR>"),
 				dashboard.button("s", "Search Notes", ":Telekasten search_notes<CR>"),
 				dashboard.button("u", "Update plugins", ":Lazy sync<CR>"),
-				dashboard.button("o", "Open NeoTree (Home)", ":Neotree reveal " .. vim.fn.expand("~") .. "<CR>"),
+				-- Snacks explorer toggle
+				dashboard.button(
+					"o",
+					"Toggle Explorer",
+					":lua if require('snacks').explorer.is_open then require('snacks').explorer.close() else require('snacks').explorer.open() end<CR>"
+				),
 				dashboard.button("j", "Go to Projects", ":Neotree reveal " .. vim.fn.expand("~/Project") .. "<CR>"),
 				dashboard.button(
 					"l",
