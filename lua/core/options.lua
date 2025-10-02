@@ -6,8 +6,8 @@ vim.cmd("let g:netrw_banner = 0 ")
 
 -- Cursor Style (Set to a wider vertical bar with blinking)
 vim.opt.guicursor = "n-v-c-sm:ver30-blinkwait700-blinkoff400-blinkon250,"
-    .. "i-ci-ve:ver30-blinkwait700-blinkoff400-blinkon250,"
-    .. "r-cr-o:hor20"
+	.. "i-ci-ve:ver30-blinkwait700-blinkoff400-blinkon250,"
+	.. "r-cr-o:hor20"
 
 -- Line numbers
 vim.opt.nu = true
@@ -73,3 +73,7 @@ vim.opt.mouse = "a"
 vim.g.editorconfig = true
 
 vim.o.shada = "!,'100,<50,s10,h"
+
+-- ======================================================
+-- Remove vertical split lines globally (main fix)
+vim.opt.fillchars:append("vert: ")

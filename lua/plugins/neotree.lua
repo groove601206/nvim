@@ -11,7 +11,17 @@ return {
 		config = function()
 			require("neo-tree").setup({
 				popup_border_style = "rounded",
-				window = { position = "left", width = 37 },
+				window = {
+					position = "left",
+					width = 37,
+					win_options = {
+						number = false,
+						relativenumber = false,
+						cursorline = false,
+						signcolumn = "no",
+						foldcolumn = "0",
+					},
+				},
 				filesystem = {
 					filtered_items = {
 						hide_dotfiles = true,
@@ -33,12 +43,15 @@ return {
 				end,
 			})
 
-			-- Toggle Neo-tree manually (if needed)
+			-- Toggle Neo-tree manually
 			vim.keymap.set("n", "<leader>n", ":Neotree toggle<CR>", { noremap = true, silent = true })
+
+			-- Make Neo-tree blend with buffer
+			vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "NONE" })
 		end,
 	},
 
-	-- Snacks.nvim (floating explorer)
+	-- Snacks.nvim (normal sidebar)
 	{
 		"folke/snacks.nvim",
 		opts = {
@@ -49,6 +62,8 @@ return {
 				side = "left",
 				hidden = true,
 				git_status = true,
+				float = false, -- normal split
+				border = "none", -- remove border for seamless blend
 				icons = { folder_closed = "", folder_open = "", file = "" },
 			},
 			picker = {
@@ -66,7 +81,6 @@ return {
 				"<leader>ee",
 				function()
 					local Snacks = require("snacks")
-					-- If explorer is already open, close it
 					if Snacks.explorer.is_open then
 						Snacks.explorer.close()
 					else
@@ -83,5 +97,9 @@ return {
 				desc = "Reveal file in Snacks",
 			},
 		},
+		config = function()
+			-- Blend Snacks with buffer
+			vim.api.nvim_set_hl(0, "SnacksNormal", { bg = "NONE" })
+		end,
 	},
 }
