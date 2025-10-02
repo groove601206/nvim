@@ -76,4 +76,8 @@ vim.o.shada = "!,'100,<50,s10,h"
 
 -- ======================================================
 -- Remove vertical split lines globally (main fix)
-vim.opt.fillchars:append("vert: ")
+-- Remove vertical window separator (works for all versions)
+vim.opt.fillchars:append({ vert = " " })
+
+-- Remove vertical split line highlight
+vim.api.nvim_set_hl(0, "WinSeparator", { bg = "NONE", fg = "NONE" })

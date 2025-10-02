@@ -9,6 +9,9 @@ return {
 			"MunifTanjim/nui.nvim",
 		},
 		config = function()
+			-- Remove vertical window separator (portable way)
+			vim.opt.fillchars:append({ vert = " " })
+
 			require("neo-tree").setup({
 				popup_border_style = "rounded",
 				window = {
@@ -62,8 +65,11 @@ return {
 				side = "left",
 				hidden = true,
 				git_status = true,
-				float = false, -- normal split
-				border = "none", -- remove border for seamless blend
+				float = false, -- normal sidebar
+				border = "none", -- no border
+				win_options = {
+					winhighlight = "Normal:Normal", -- blend with buffer, removes separator
+				},
 				icons = { folder_closed = "", folder_open = "", file = "" },
 			},
 			picker = {
