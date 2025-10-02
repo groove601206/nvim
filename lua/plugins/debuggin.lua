@@ -1,11 +1,11 @@
+-- plugins/dap.lua
 --[[
-Debugging Configuration for Neovim
-Includes:
+Full Debugging Setup for Neovim:
 - nvim-dap with Python support
-- nvim-dap-ui (UI panels)
-- nvim-dap-virtual-text (inline debugging info)
-- Telescope integration for dap commands
-- Expression evaluation
+- nvim-dap-ui
+- nvim-dap-virtual-text
+- Telescope integration
+- Keymaps & auto DAP UI open/close
 --]]
 
 return {
@@ -14,17 +14,21 @@ return {
 		dependencies = {
 			"rcarriga/nvim-dap-ui",
 			"theHamsta/nvim-dap-virtual-text",
-			"mfussenegger/nvim-dap-python",
+			{
+				"mfussenegger/nvim-dap-python",
+				version = false, -- disable tags
+				build = function() end, -- skip LuaRocks
+			},
 			"williamboman/mason.nvim",
 			"jay-babu/mason-nvim-dap.nvim",
 		},
 		config = function()
-			local function safe_require(module)
-				local ok, mod = pcall(require, module)
+			local function safe_require(mod)
+				local ok, m = pcall(require, mod)
 				if not ok then
-					vim.notify("Error loading " .. module .. ": " .. mod, vim.log.levels.ERROR)
+					vim.notify("Failed loading " .. mod .. ": " .. m, vim.log.levels.ERROR)
 				end
-				return mod
+				return m
 			end
 
 			local dap = safe_require("dap")
@@ -35,7 +39,7 @@ return {
 				return
 			end
 
-			-- Ensure pyenv shims are in Neovim PATH
+			-- Ensure pyenv shims are in PATH
 			vim.env.PATH = os.getenv("HOME") .. "/.pyenv/shims:" .. vim.env.PATH
 
 			-- Mason DAP setup
@@ -44,53 +48,36 @@ return {
 				ensure_installed = { "python" },
 			})
 
-			-- Robust function to get Python executable
+			-- Robust Python path
 			local function get_python_path()
 				local cwd = vim.fn.getcwd()
-
-				-- 1. Project virtualenv
-				local venv_python = cwd .. "/.venv/bin/python"
-				if vim.fn.executable(venv_python) == 1 then
-					return venv_python
+				local venv = cwd .. "/.venv/bin/python"
+				if vim.fn.executable(venv) == 1 then
+					return venv
 				end
-
-				-- 2. VIRTUAL_ENV environment
-				local venv_env = os.getenv("VIRTUAL_ENV")
-				if venv_env and vim.fn.executable(venv_env .. "/bin/python") == 1 then
-					return venv_env .. "/bin/python"
+				local env = os.getenv("VIRTUAL_ENV")
+				if env and vim.fn.executable(env .. "/bin/python") == 1 then
+					return env .. "/bin/python"
 				end
-
-				-- 3. pyenv active Python
-				local pyenv_python = vim.fn.trim(vim.fn.system("pyenv which python 2>/dev/null"))
-				if pyenv_python ~= "" and vim.fn.executable(pyenv_python) == 1 then
-					return pyenv_python
+				local pyenv = vim.fn.trim(vim.fn.system("pyenv which python 2>/dev/null"))
+				if pyenv ~= "" and vim.fn.executable(pyenv) == 1 then
+					return pyenv
 				end
-
-				-- 4. System Python fallback
 				return vim.fn.exepath("python3") or "/usr/bin/python3"
 			end
 
-			-- Setup nvim-dap-python with the correct Python
 			dap_python.setup(get_python_path(), { justMyCode = false })
 
-			-- DAP UI setup
+			-- DAP UI
 			dapui.setup({
 				icons = { expanded = "▾", collapsed = "▸", current_frame = "" },
 				layouts = {
-					{
-						elements = { "scopes", "breakpoints", "stacks", "watches" },
-						size = 40,
-						position = "left",
-					},
-					{
-						elements = { "repl", "console" },
-						size = 10,
-						position = "bottom",
-					},
+					{ elements = { "scopes", "breakpoints", "stacks", "watches" }, size = 40, position = "left" },
+					{ elements = { "repl", "console" }, size = 10, position = "bottom" },
 				},
 			})
 
-			-- Virtual text setup
+			-- Virtual Text
 			vt.setup({
 				enabled = true,
 				enabled_commands = true,
@@ -101,12 +88,18 @@ return {
 				virt_text_pos = "eol",
 			})
 
-			-- Auto-open/close DAP UI
-			dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-			dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-			dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+			-- Auto open/close UI
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				dapui.close()
+			end
 
-			-- Sign definitions
+			-- Signs
 			vim.fn.sign_define("DapBreakpoint", { text = "●", texthl = "DapBreakpoint" })
 			vim.fn.sign_define("DapStopped", { text = "", texthl = "DapStopped", linehl = "Visual" })
 			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticError" })
@@ -114,11 +107,13 @@ return {
 
 			-- Keymaps
 			local map = vim.keymap.set
+			map("n", "<leader>dc", dap.continue, { desc = "Start/Continue Debugging" })
 			map("n", "<leader>da", dap.continue, { desc = "Run with Args" })
 			map("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-			map("n", "<leader>dB", function() dap.set_breakpoint(vim.fn.input("Condition: ")) end, { desc = "Breakpoint Condition" })
+			map("n", "<leader>dB", function()
+				dap.set_breakpoint(vim.fn.input("Condition: "))
+			end, { desc = "Breakpoint Condition" })
 			map("n", "<leader>dC", dap.run_to_cursor, { desc = "Run to Cursor" })
-			map("n", "<leader>dc", dap.continue, { desc = "Run/Continue" })
 			map("n", "<leader>de", dapui.eval, { desc = "Evaluate Expression" })
 			map("n", "<leader>dg", dap.goto_, { desc = "Go to Line (No Execute)" })
 			map("n", "<leader>di", dap.step_into, { desc = "Step Into" })
@@ -137,7 +132,7 @@ return {
 				require("dapui").elements.watches.add(expr)
 			end, { desc = "Add Watch Expression" })
 
-			-- Telescope integration
+			-- Telescope DAP integration
 			map("n", "<leader>fdc", "<cmd>Telescope dap commands<cr>", { desc = "DAP Commands" })
 			map("n", "<leader>fdb", "<cmd>Telescope dap list_breakpoints<cr>", { desc = "Breakpoints" })
 			map("n", "<leader>fdF", "<cmd>Telescope dap frames<cr>", { desc = "DAP Frames" })
@@ -145,8 +140,12 @@ return {
 			-- DAP widgets
 			local widgets = require("dap.ui.widgets")
 			map("n", "<leader>dh", widgets.hover, { desc = "DAP Hover" })
-			map("n", "<leader>dS", function() widgets.centered_float(widgets.scopes) end, { desc = "DAP Scopes Float" })
-			map("n", "<leader>dF", function() widgets.centered_float(widgets.frames) end, { desc = "DAP Frames Float" })
+			map("n", "<leader>dS", function()
+				widgets.centered_float(widgets.scopes)
+			end, { desc = "DAP Scopes Float" })
+			map("n", "<leader>dF", function()
+				widgets.centered_float(widgets.frames)
+			end, { desc = "DAP Frames Float" })
 		end,
 	},
 }
