@@ -1,5 +1,7 @@
-import calendar  # Standard library calendar
-import unittest  # Ensure you import unittest
+"""Unit tests for 2025 calendar generation functions."""
+
+import calendar
+import unittest
 
 
 def get_2025_calendar():
@@ -13,39 +15,37 @@ def get_monthly_2025():
 
 
 class TestCalendar2025(unittest.TestCase):
+    """Unit tests for verifying the correctness of 2025 calendar generation."""
 
     def test_full_year_calendar(self):
         """Check if the full-year calendar matches expected output."""
         expected = calendar.TextCalendar().formatyear(2025)
         result = get_2025_calendar()
-
-        # Strip leading/trailing whitespaces to make sure the comparison is more robust
         self.assertEqual(result.strip(), expected.strip())
 
     def test_monthly_calendars(self):
         """Check if each month's calendar matches expected output."""
         expected = [calendar.monthcalendar(2025, month) for month in range(1, 13)]
         result = get_monthly_2025()
-
-        # Compare the two lists of lists directly
         self.assertEqual(result, expected)
 
     def test_monthly_calendar_content(self):
-        """Check the *content* of a specific month's calendar."""
+        """Check the content of January 2025's calendar."""
         january_calendar = calendar.monthcalendar(2025, 1)  # January is month 1
         self.assertEqual(len(january_calendar), 5)  # January 2025 has 5 weeks
         self.assertEqual(january_calendar[0], [0, 0, 1, 2, 3, 4, 5])  # First week
 
 
 # Create a test suite
-def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(TestCalendar2025("test_full_year_calendar"))
-    suite.addTest(TestCalendar2025("test_monthly_calendars"))
-    suite.addTest(TestCalendar2025("test_monthly_calendar_content"))
-    return suite
+def load_tests():
+    """Return a unittest test suite for the TestCalendar2025 class."""
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(TestCalendar2025("test_full_year_calendar"))
+    test_suite.addTest(TestCalendar2025("test_monthly_calendars"))
+    test_suite.addTest(TestCalendar2025("test_monthly_calendar_content"))
+    return test_suite
 
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(suite())
+    runner.run(load_tests())
