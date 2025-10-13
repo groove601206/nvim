@@ -18,7 +18,7 @@ return {
 					"black",
 					"isort",
 					"mypy",
-					"pylint",
+
 					"debugpy",
 					"stylua",
 				},
