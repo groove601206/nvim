@@ -10,7 +10,10 @@ return {
 			explorer = { enabled = true },
 			indent = { enabled = true }, -- Indentation guides
 			input = { enabled = true },
-			picker = { enabled = true },
+			picker = {
+				enabled = true,
+				layout = "vertical", -- ⚠ важно для избежания ошибки layout = nil
+			},
 			notifier = {
 				enabled = true,
 				timeout = 7500,
