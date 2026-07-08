@@ -11,14 +11,15 @@ return {
 			local mason_null_ls = require("mason-null-ls")
 			local fn = vim.fn
 
-			-- 🔧 Initialize Mason
+			-- Initialize Mason
 			mason.setup()
+
 			mason_null_ls.setup({
 				ensure_installed = { "black", "isort", "mypy", "stylua", "debugpy" },
 				automatic_installation = true,
 			})
 
-			-- 📍 Helper to find Python executable
+			-- Helper to find Python executable
 			local function find_python(executable)
 				local venv = os.getenv("VIRTUAL_ENV")
 				if venv and fn.executable(venv .. "/bin/" .. executable) == 1 then
@@ -38,40 +39,41 @@ return {
 					end
 				end
 
-				return executable -- fallback to system PATH
+				return executable
 			end
 
-			-- 📂 Determine project root
+			-- Determine project root
 			local root_dir = require("null-ls.utils").root_pattern(".git", "pyproject.toml", "setup.cfg", "setup.py")
 
-			-- 🚀 Setup null-ls
+			-- Setup none-ls
 			null_ls.setup({
 				autostart = true,
 				root_dir = root_dir,
+
 				sources = {
 					-- Formatters
 					null_ls.builtins.formatting.black.with({
 						command = find_python("black"),
 						extra_args = { "--fast" },
 					}),
+
 					null_ls.builtins.formatting.isort.with({
 						command = find_python("isort"),
 					}),
+
 					null_ls.builtins.formatting.stylua,
 
-					-- Linters / Diagnostics
+					-- Diagnostics
 					null_ls.builtins.diagnostics.mypy.with({
 						command = find_python("mypy"),
 						extra_args = { "--show-error-codes", "--no-color-output" },
 					}),
 
-					-- Pylint wrapped safely
 					null_ls.builtins.diagnostics.pylint.with({
 						command = find_python("pylint"),
 						extra_args = { "--output-format=json" },
-						-- skip if JSON output is broken
 						condition = function(utils)
-							local ok, _ = pcall(fn.system, find_python("pylint") .. " --version")
+							local ok = pcall(fn.system, find_python("pylint") .. " --version")
 							return ok
 						end,
 					}),
@@ -79,12 +81,13 @@ return {
 					-- Code actions
 					null_ls.builtins.code_actions.refactoring,
 				},
+
 				on_attach = function(client, bufnr)
-					vim.diagnostic.enable(bufnr)
+					-- nothing needed here for diagnostics in Neovim 0.12
 				end,
 			})
 
-			-- 💾 Format automatically on save
+			-- Format automatically on save
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = { "*.py", "*.lua" },
 				callback = function()
@@ -97,7 +100,7 @@ return {
 				end,
 			})
 
-			-- 🔁 Keymaps
+			-- Keymaps
 			vim.keymap.set("n", "<leader>oi", function()
 				vim.cmd("!isort %")
 			end, { desc = "Organize Imports (isort)" })
